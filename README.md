@@ -2,7 +2,7 @@
 
 A lightweight, modular Windows desktop automation assistant built with Python.
 
-This first version is a **text-command based** assistant designed to be simple, clean, and beginner-friendly. Voice recognition and advanced system controls can be plugged in naturally in future versions.
+Supports both **text commands** and **voice input** using a unified, clean command routing architecture.
 
 ---
 
@@ -11,72 +11,65 @@ This first version is a **text-command based** assistant designed to be simple, 
 ```text
 laptop-automation-assistant/
 │
-├── actions.py       # Functions that perform actions on your laptop (Chrome, WhatsApp, Search, Lock)
-├── commands.py      # Parses user input and routes it to the correct action
-├── main.py          # Interactive command-line loop (entry point)
-└── README.md        # Documentation and guide
+├── actions.py         # Low-level functions that interact with Windows (Chrome, WhatsApp, Search, Lock)
+├── commands.py        # Parses text and routes both text and voice commands
+├── voice.py           # Handles microphone input and speech recognition
+├── main.py            # Interactive command-line loop (entry point)
+├── requirements.txt   # Dependencies for voice input (SpeechRecognition, PyAudio)
+├── .gitignore         # Prevents Python cache and system files from being tracked
+└── README.md          # Documentation and guide
 ```
 
 ### What Each File Does:
-1. **[actions.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/actions.py)**: Contains the actual logic that interacts with Windows (using Python's built-in `os`, `ctypes`, `webbrowser`, and `urllib` modules). No external packages required!
-2. **[commands.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/commands.py)**: Takes what you type, cleans the text, matches it against known commands, and calls the appropriate function from `actions.py`.
-3. **[main.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/main.py)**: The main entry point. Starts the assistant, displays a prompt (`Assistant > `), and lets you interact continuously until you type `exit`.
+1. **[actions.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/actions.py)**: Low-level actions (uses Windows APIs and standard library).
+2. **[commands.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/commands.py)**: Central command processor. All inputs (text or voice) pass through here, ensuring no duplicated action logic.
+3. **[voice.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/voice.py)**: Encapsulates microphone listening and speech-to-text.
+4. **[main.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/main.py)**: The main entry point running the assistant loop.
+5. **[requirements.txt](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/requirements.txt)**: Lists the minimal packages needed for speech recognition.
 
 ---
 
-## 💻 Supported Commands (v1.0)
+## 💻 Supported Commands
 
-| Command | What it does | Example |
-|---|---|---|
-| `help` | Shows the list of available commands | `help` |
-| `open chrome` | Launches Google Chrome | `open chrome` |
-| `open whatsapp` | Launches WhatsApp Desktop | `open whatsapp` |
-| `search <query>` | Performs a Google search in your browser | `search python tutorial` |
-| `lock` | Locks your Windows laptop (like Win + L) | `lock` |
-| `exit` / `quit` | Closes the assistant | `exit` |
+| Command | What it does | Voice Example | Text Example |
+|---|---|---|---|
+| `voice` / `listen` | Listens to your microphone for a voice command | Speak into mic | `voice` |
+| `open chrome` | Launches Google Chrome | "open chrome" / "open google chrome" | `open chrome` |
+| `open whatsapp` | Launches WhatsApp Desktop | "open whatsapp" | `open whatsapp` |
+| `search <query>` | Performs a Google search in browser | "search for python" / "search python" | `search python tutorial` |
+| `lock` | Locks your Windows laptop | "lock laptop" / "lock screen" | `lock` |
+| `help` | Shows the list of available commands | "help" | `help` |
+| `exit` / `quit` | Closes the assistant | "exit" / "bye" | `exit` |
 
 ---
 
-## 🚀 How to Run
+## 🚀 Setup & Running
 
-1. Open PowerShell or Command Prompt in this folder (`laptop-automation-assistant`).
-2. Run the application with Python:
+### 1. (Optional) Install Voice Dependencies
+If you want to use the microphone for voice control:
+```cmd
+pip install -r requirements.txt
+```
+*(If you don't install these, text commands continue working normally as a fallback!)*
 
-```bash
+### 2. Run the Assistant
+```cmd
 python main.py
 ```
 
-3. Type any command, for example:
+### 3. Using Voice Commands
+When prompted with `Assistant > `, type `voice` or `listen`:
 ```text
-Assistant > search how to learn python
-Searching Google for: 'how to learn python'
+Assistant > voice
 
-Assistant > open chrome
+[Voice Mode] Listening... (Speak your command into the microphone)
+[Voice Mode] Processing speech...
+[Voice Mode] Recognized: 'open chrome'
 Opened Google Chrome.
-
-Assistant > exit
-Goodbye! Have a great day.
 ```
 
----
-
-## 🛠️ How to Add a New Action (Beginner Guide)
-
-Whenever you want to add a new command (for example, setting a timer or changing volume):
-
-1. **Write the action logic in [actions.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/actions.py)**:
-   ```python
-   def my_new_action() -> str:
-       # Your logic here
-       return "Action completed!"
-   ```
-
-2. **Route the command in [commands.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/commands.py)**:
-   - Add it to `AVAILABLE_COMMANDS` so `help` will show it.
-   - Add a condition inside `process_command`:
-     ```python
-     if normalized == "my command":
-         return actions.my_new_action(), True
-     ```
-
-3. **Run [main.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/main.py)** and test your new command!
+If you prefer typing, simply type your command directly at any time:
+```text
+Assistant > search machine learning
+Searching Google for: 'machine learning'
+```
