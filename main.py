@@ -13,7 +13,7 @@ def print_banner() -> None:
     banner = (
         "\n"
         "=====================================================\n"
-        "       Laptop Automation Assistant (v1.1)           \n"
+        "       Laptop Automation Assistant (v1.2)           \n"
         "=====================================================\n"
         " - Type any text command (e.g. 'open chrome')\n"
         " - Type 'voice' or 'listen' to speak into microphone\n"
