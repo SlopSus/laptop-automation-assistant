@@ -12,6 +12,16 @@ import voice
 # List of supported commands for the help menu
 AVAILABLE_COMMANDS = [
     ("voice / listen", "Listens for a voice command via microphone"),
+    ("volume up", "Increases master volume"),
+    ("volume down", "Decreases master volume"),
+    ("mute", "Mutes system audio"),
+    ("unmute", "Unmutes system audio"),
+    ("battery", "Reports battery percentage and charging status"),
+    ("open notepad", "Opens Windows Notepad"),
+    ("open calculator", "Opens Windows Calculator"),
+    ("open file explorer", "Opens Windows File Explorer"),
+    ("open settings", "Opens Windows Settings"),
+    ("open youtube", "Opens YouTube in default browser"),
     ("open chrome", "Opens the Google Chrome browser"),
     ("open whatsapp", "Opens WhatsApp Desktop"),
     ("search <query>", "Searches Google for the given keywords (e.g., search python)"),
@@ -25,7 +35,7 @@ def get_help_message() -> str:
     """Returns a formatted string listing all supported commands."""
     lines = ["Available Commands:"]
     for cmd, desc in AVAILABLE_COMMANDS:
-        lines.append(f"  - {cmd:<18} : {desc}")
+        lines.append(f"  - {cmd:<20} : {desc}")
     return "\n".join(lines)
 
 
@@ -65,6 +75,60 @@ def process_command(user_input: str) -> Tuple[str, bool]:
         print(f"[Voice Mode] Recognized: '{recognized_text}'")
         # Route recognized speech directly through this same command processor!
         return process_command(recognized_text)
+
+    # --- Volume Controls ---
+    if normalized in ("volume up", "increase volume", "turn volume up", "turn up volume", "raise volume", "louder"):
+        return actions.volume_up(), True
+
+    if normalized in ("volume down", "decrease volume", "turn volume down", "turn down volume", "lower volume", "quieter"):
+        return actions.volume_down(), True
+
+    if normalized in ("mute", "mute volume", "mute audio", "silence"):
+        return actions.mute_volume(), True
+
+    if normalized in ("unmute", "unmute volume", "unmute audio"):
+        return actions.unmute_volume(), True
+
+    # --- Battery Status ---
+    if normalized in (
+        "battery",
+        "battery status",
+        "battery percentage",
+        "battery level",
+        "check battery",
+        "power status",
+        "how much battery",
+    ):
+        return actions.get_battery_status(), True
+
+    # --- Quick Application Launchers ---
+    if normalized in ("open notepad", "notepad", "launch notepad"):
+        return actions.open_notepad(), True
+
+    if normalized in ("open calculator", "open calc", "calculator", "calc", "launch calculator"):
+        return actions.open_calculator(), True
+
+    if normalized in (
+        "open file explorer",
+        "open explorer",
+        "file explorer",
+        "explorer",
+        "open files",
+        "launch explorer",
+    ):
+        return actions.open_file_explorer(), True
+
+    if normalized in (
+        "open settings",
+        "open windows settings",
+        "settings",
+        "windows settings",
+        "launch settings",
+    ):
+        return actions.open_settings(), True
+
+    if normalized in ("open youtube", "youtube", "launch youtube"):
+        return actions.open_youtube(), True
 
     # --- Open Chrome ---
     if normalized in ("open chrome", "chrome", "launch chrome", "open google chrome"):
