@@ -2,7 +2,7 @@
 
 A lightweight, modular Windows desktop automation assistant built with Python.
 
-Supports both **text commands** and **voice input** using a unified, clean command routing architecture.
+Supports **text commands**, **voice input** (STT), and **spoken voice responses** (TTS) with a JARVIS-inspired voice experience using a unified, clean command routing architecture.
 
 ---
 
@@ -13,10 +13,11 @@ laptop-automation-assistant/
 │
 ├── actions.py         # Low-level Windows automation (Apps, Volume, Battery, Search, Lock)
 ├── commands.py        # Parses text and routes both text and voice commands
-├── voice.py           # Handles microphone input and speech recognition
+├── voice.py           # Handles microphone input and speech recognition (STT)
+├── tts.py             # Text-to-Speech synthesis with JARVIS voice profile (TTS)
 ├── main.py            # Interactive command-line loop (entry point)
 ├── run.bat            # One-click Windows batch launcher
-├── requirements.txt   # Dependencies for voice input (SpeechRecognition, PyAudio)
+├── requirements.txt   # Dependencies (SpeechRecognition, PyAudio, pyttsx3)
 ├── .gitignore         # Prevents Python cache and system files from being tracked
 └── README.md          # Documentation and guide
 ```
@@ -25,9 +26,10 @@ laptop-automation-assistant/
 1. **[actions.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/actions.py)**: Low-level actions using Windows APIs and standard library (volume keys, power status, app execution).
 2. **[commands.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/commands.py)**: Central command processor. All inputs (text or voice) pass through here, ensuring no duplicated action logic.
 3. **[voice.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/voice.py)**: Encapsulates microphone listening and speech-to-text.
-4. **[main.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/main.py)**: The main entry point running the assistant loop.
-5. **[run.bat](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/run.bat)**: Double-clickable batch launcher for Windows.
-6. **[requirements.txt](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/requirements.txt)**: Lists the minimal packages needed for speech recognition.
+4. **[tts.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/tts.py)**: Modular text-to-speech engine configured with a calm, professional voice, natural spoken phrasing, and graceful error handling.
+5. **[main.py](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/main.py)**: The main entry point running the assistant loop with spoken feedback.
+6. **[run.bat](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/run.bat)**: Double-clickable batch launcher for Windows.
+7. **[requirements.txt](file:///C:/Users/Priyadarshan/OneDrive/Desktop/laptop-automation-assistant/requirements.txt)**: Lists the minimal packages needed for speech recognition and local TTS.
 
 ---
 
@@ -57,8 +59,8 @@ laptop-automation-assistant/
 
 ## 🚀 Setup & Running
 
-### 1. (Optional) Install Voice Dependencies
-If you want to use the microphone for voice control:
+### 1. (Optional) Install Voice & TTS Dependencies
+If you want to use voice input and hear spoken voice responses:
 ```cmd
 pip install -r requirements.txt
 ```
@@ -69,7 +71,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### 3. Using Voice Commands
+### 3. Using Voice Commands & Spoken Feedback
 When prompted with `Assistant > `, type `voice` or `listen`:
 ```text
 Assistant > voice
@@ -78,10 +80,19 @@ Assistant > voice
 [Voice Mode] Processing speech...
 [Voice Mode] Recognized: 'open chrome'
 Opened Google Chrome.
+🔊 [Voice Output]: "Opening Chrome."
 ```
 
 If you prefer typing, simply type your command directly at any time:
 ```text
 Assistant > search machine learning
 Searching Google for: 'machine learning'
+🔊 [Voice Output]: "Searching Google for machine learning."
 ```
+
+### 4. JARVIS-Inspired Voice Feedback
+- **Calm & Steady**: Paced at ~160 WPM for a composed, professional demeanor.
+- **Natural Phrasing**: Translates technical terminal logs into natural spoken sentences (e.g., *"Opening YouTube."*, *"Your battery is 85 percent and charging."*, *"Volume muted."*).
+- **British/Deep Voice Priority**: Prefers installed British voices (e.g., George, Hazel, Oliver) or clear, deep male voices (e.g., Microsoft David).
+- **100% Offline & Free**: Operates fully on-device via Windows SAPI with zero external API calls or subscription costs.
+- **Fail-Safe**: If audio devices are busy or TTS encounters an issue, the assistant continues executing commands smoothly without interruption.

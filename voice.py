@@ -6,6 +6,7 @@ Converts spoken words into text commands using the SpeechRecognition library.
 """
 
 from typing import Tuple, Optional
+from tts import speak, get_spoken_text
 
 try:
     import speech_recognition as sr
