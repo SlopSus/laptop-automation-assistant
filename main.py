@@ -6,6 +6,7 @@ Runs the interactive Command-Line Interface (CLI) loop.
 """
 
 from commands import process_command
+import tts
 
 
 def print_banner() -> None:
@@ -13,7 +14,7 @@ def print_banner() -> None:
     banner = (
         "\n"
         "=====================================================\n"
-        "       Laptop Automation Assistant (v1.2)           \n"
+        "       Laptop Automation Assistant (v1.3)           \n"
         "=====================================================\n"
         " - Type any text command (e.g. 'open chrome')\n"
         " - Type 'voice' or 'listen' to speak into microphone\n"
@@ -38,6 +39,11 @@ def main() -> None:
             # Display the result
             print(response)
             print()  # Add a clean blank line between interactions
+
+            # Speak the response aloud using text-to-speech
+            spoken_text = tts.get_spoken_text(response)
+            if spoken_text:
+                tts.speak(spoken_text)
 
             # Check if the user requested to exit
             if not keep_running:
